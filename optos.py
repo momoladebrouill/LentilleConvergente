@@ -37,7 +37,7 @@ f=pg.display.set_mode((wind.larg,wind.haut),pg.RESIZABLE)
 fps=pg.time.Clock()
 font=pg.font.SysFont("consolas",20)
 try:
-    arbre=pg.image.load("./arbre.png")
+    arbre=pg.image.load("files/arbre.png")
     arbrerect=arbre.get_rect()
 except:
     arbre=pg.Surface((100,100))
