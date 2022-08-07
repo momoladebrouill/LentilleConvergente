@@ -1,9 +1,9 @@
-import pygame as pg
-import files.utis as utis
 import random
-from files.utis import math
 import time
+import pygame as pg
 from datetime import date,datetime
+import files.utis as utis
+from files.utis import math
 
 class wind:
     larg=750
@@ -13,29 +13,31 @@ def montr(texte,pos,coul=(255,255,255)):
     te=font.render(texte,False,coul)
     f.blit(te,pos)
     return te.get_rect()
+
 random.seed()
-B=1
-mid=utis.Pos(wind.larg/2,wind.haut/2)
-a=utis.Pos(wind.larg/3,wind.haut/4)
-p=a
-foc=50
-fakefoc=50
-pressed=False
-shownerd=True
-showarbres=False
+B = 1 #La boucle d'activité
+mid = utis.Pos(wind.larg/2,wind.haut/2)
+a = utis.Pos(wind.larg/3,wind.haut/4)
+p = a
+foc = 50
+fakefoc = 50
+pressed = False
+shownerd = True
+showarbres = False
 
 
 
 pg.init()
-font=pg.font.SysFont("consolas",20)
-icon=pg.Surface((100,100))
+font = pg.font.SysFont("consolas",20)
+icon = pg.Surface((100,100))
 icon.fill(random.randrange(0,0xffffff))
 icon.blit(font.render(' ',1,(255,0,0)),(0,0))
 pg.display.set_icon(icon)
 pg.display.set_caption("Shema optique focale du Capitaine µ")
-f=pg.display.set_mode((wind.larg,wind.haut),pg.RESIZABLE)
-fps=pg.time.Clock()
-font=pg.font.SysFont("consolas",20)
+f = pg.display.set_mode((wind.larg,wind.haut),pg.RESIZABLE)
+fps = pg.time.Clock()
+font = pg.font.SysFont("consolas",20)
+
 try:
     arbre=pg.image.load("files/arbre.png")
     arbrerect=arbre.get_rect()
@@ -44,9 +46,6 @@ except:
     arbre.blit(font.render("FranceSus",True,(255,255,255)),(0,0))
     arbre.blit(font.render("µ",True,(255,255,255)),(40,40))
     arbrerect=arbre.get_rect()
-
-
-
 
 while B:
     fps.tick(60)
@@ -151,6 +150,7 @@ while B:
     else:           adj+="rétrécie"
     
     # Affichahge stats de nerds
+    
     if shownerd:
         #NO
         decal=montr("BA Taille  : "+str(int(mid.y-a.y))+"px",
@@ -177,21 +177,22 @@ while B:
               (wind.larg-300,wind.haut-20))
     
     # Déplacement de la focale et du point de l'user
-    foc+=(fakefoc-foc)/10
     
+    foc+=(fakefoc-foc)/10
     if pressed:
-        posi=pg.mouse.get_pos()
-        p=utis.Pos(posi[0],posi[1])
-    goto=utis.Vec(long=p.dist(a)/7,angle=p.angle(a))
-    a.x+=goto.x
-    a.y+=goto.y
+        posi = pg.mouse.get_pos()
+        p = utis.Pos(posi[0],posi[1])
+    goto = utis.Vec(long=p.dist(a)/7,angle=p.angle(a))
+    a.x += goto.x
+    a.y += goto.y
         
+    # Event listener
+
     for event in pg.event.get():
-        
         if event.type == pg.QUIT:
             pg.quit()
             B=0
-            
+
         elif event.type == pg.MOUSEBUTTONUP:
             if event.dict['button']==4:
                 fakefoc+=10
@@ -220,11 +221,15 @@ while B:
                 pg.image.save(f,today.strftime("%d %B %Y")+','+now.strftime("%H.%M.%S")+".png")
                 for i in range(10):
                     time.sleep(0.1)
-                    f.blit(font.render('Image téléchargée !!!',True,(random.randrange(0,255),random.randrange(0,255),random.randrange(0,255))),(wind.larg-300,wind.haut-80))
+                    f.blit(font.render('Image téléchargée !!!',
+                        True,
+                        (random.randrange(0,255),random.randrange(0,255),random.randrange(0,255))),
+                        (wind.larg-300,wind.haut-80))
                     pg.display.flip()
                 time.sleep(1)
             elif keu==pg.K_h:
-                shownerd=not shownerd
+                shownerd = not shownerd
             elif keu==pg.K_a:
-                showarbres=not showarbres
-            fakefoc=abs(fakefoc)
+                showarbres = not showarbres
+            fakefoc = abs(fakefoc)
+
