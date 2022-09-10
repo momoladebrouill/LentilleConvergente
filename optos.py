@@ -14,7 +14,6 @@ def montr(texte,pos,coul=(255,255,255)):
     f.blit(te,pos)
     return te.get_rect()
 
-random.seed()
 B = 1 #La boucle d'activité
 mid = utis.Pos(wind.larg/2,wind.haut/2)
 a = utis.Pos(wind.larg/3,wind.haut/4)
@@ -25,8 +24,6 @@ pressed = False
 shownerd = True
 showarbres = False
 
-
-
 pg.init()
 font = pg.font.SysFont("consolas",20)
 icon = pg.Surface((100,100))
@@ -36,7 +33,6 @@ pg.display.set_icon(icon)
 pg.display.set_caption("Shema optique focale du Capitaine µ")
 f = pg.display.set_mode((wind.larg,wind.haut),pg.RESIZABLE)
 fps = pg.time.Clock()
-font = pg.font.SysFont("consolas",20)
 
 try:
     arbre=pg.image.load("files/arbre.png")
@@ -52,7 +48,7 @@ while B:
     pg.display.flip()
     f.fill(0)
     
-    #### Les calculs (pas rénaux)
+    ### Les calculs (pas rénaux)
     
     # De A vers F'
     ang=math.atan2(mid.y-a.y,foc)
@@ -71,7 +67,7 @@ while B:
     # Gamma
     gam=(mid.y-b.y)/(mid.y-a.y)
     
-    ##### Los dibujos
+    ### Los dibujos
     
     # Quadrillage
     pg.draw.line(f,0xffffff,(0,mid.y),(wind.larg,mid.y))
@@ -139,42 +135,28 @@ while B:
 
     # Description de l'image
     
-    adj="Image "
-    if b.x<mid.x:   adj+="virtuelle"
-    else:           adj+="réelle"
-    adj+=", "
-    if gam>0:   adj+="droite"
-    else:       adj+="renversée"
-    adj+=" et "
-    if abs(gam)>1:  adj+="agrandie"
-    else:           adj+="rétrécie"
+    adj="Image %s, %s et %s ." %(
+            "virtuelle" if b.x < mid.x else "réelle",
+            "droite" if gam > 0 else "renversée",
+            "agrandie" if abs(gam) > 1 else "rétrécie")
     
     # Affichahge stats de nerds
     
     if shownerd:
         #NO
-        decal=montr("BA Taille  : "+str(int(mid.y-a.y))+"px",
-                    (0,0),(255,0,255)).height
-        montr("BO Distance lentille : "+str(int(mid.x-a.x))+"px",
-              (0,decal))
+        decal=montr("BA Taille  : %i px" % (mid.y - a.y),(0,0),(255,0,255)).height
+        montr("BO Distance lentille : %i px" % (mid.x-a.x),(0,decal))
         #NE
-        montr("B'A' Taille de l'image formé : "+str(int(mid.y-b.y))+"px",
-              (mid.x+10,0),(0,255,0))
-        montr("B'O Distance lentille : "+str(int(mid.x-b.x))+"px",
-              (mid.x+10,decal))
+        montr("B'A' Taille de l'image formé : %i px" % (mid.y-b.y),(mid.x+10,0),(0,255,0))
+        montr("B'O Distance lentille : %i px" % (mid.x-b.x), (mid.x+10,decal))
         #SO
-        montr("OF' Distance focale   : "+str(int(fakefoc))+"px",
-              (0,wind.haut-decal),(255,0,0))
-        montr("Gamma γ : "+str(gam),
-              (0,wind.haut-2*decal))
+        montr("OF' Distance focale : %i px " % fakefoc,(0,wind.haut-decal),(255,0,0))
+        montr(f"Gamma γ : {gam}",(0,wind.haut-2*decal))
         montr(adj,(0,wind.haut-3*decal))
         #SE
-        montr("A pour montrer les arbres",
-              (wind.larg-300,wind.haut-60))
-        montr("S pour télécharger l'image",
-              (wind.larg-300,wind.haut-40))
-        montr("H pour afficher les stats",
-              (wind.larg-300,wind.haut-20))
+        montr("A pour montrer les arbres",(wind.larg-300,wind.haut-60))
+        montr("S pour télécharger l'image",(wind.larg-300,wind.haut-40))
+        montr("H pour afficher les stats",(wind.larg-300,wind.haut-20))
     
     # Déplacement de la focale et du point de l'user
     
@@ -192,7 +174,6 @@ while B:
         if event.type == pg.QUIT:
             pg.quit()
             B=0
-
         elif event.type == pg.MOUSEBUTTONUP:
             if event.dict['button']==4:
                 fakefoc+=10
@@ -200,24 +181,21 @@ while B:
                 fakefoc-=10
             fakefoc=abs(fakefoc)
             pressed=False
-            
         elif event.type == pg.MOUSEBUTTONDOWN:
             pressed=True
-
         elif event.type==pg.VIDEORESIZE:
             wind.haut,wind.larg=event.h,event.w
             mid=utis.Pos(wind.larg/2,wind.haut/2)
             a=utis.Pos(wind.larg/3,wind.haut/4)
-            
         elif event.type==pg.KEYUP:
-            keu=event.dict['key']
-            if keu==pg.K_UP:
+            keu = event.dict['key']
+            if keu == pg.K_UP:
                 fakefoc+=10
-            elif keu==pg.K_DOWN:
+            elif keu == pg.K_DOWN:
                 fakefoc-=10
-            elif keu==pg.K_s:
-                today=date.today()
-                now=datetime.now()
+            elif keu == pg.K_s:
+                today = date.today()
+                now = datetime.now()
                 pg.image.save(f,today.strftime("%d %B %Y")+','+now.strftime("%H.%M.%S")+".png")
                 for i in range(10):
                     time.sleep(0.1)
@@ -227,9 +205,9 @@ while B:
                         (wind.larg-300,wind.haut-80))
                     pg.display.flip()
                 time.sleep(1)
-            elif keu==pg.K_h:
+            elif keu == pg.K_h:
                 shownerd = not shownerd
-            elif keu==pg.K_a:
+            elif keu == pg.K_a:
                 showarbres = not showarbres
             fakefoc = abs(fakefoc)
 
